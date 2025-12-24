@@ -1,0 +1,1819 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>هاش للذكاء الاصطناعي  — Prototype جاهز عرض</title>
+  <meta name="description" content="منصة أَثَر: تحويل الرأي العام إلى مهام إعلامية تدريبية — نموذج أولي للعرض." />
+
+  <style>
+    :root{
+      --bg:#F7F8FB; --card:#fff; --text:#0F172A; --muted:#64748B; --border:#E2E8F0;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --primary:#1F2937; --secondary:#6366F1; --accent:#10B981; --danger:#EF4444;
+      --radius:18px; --radius-sm:12px; --pad:18px; --max:1120px;
+
+      --heroGrad: radial-gradient(1200px 500px at 70% -10%, rgba(99,102,241,.25), transparent 55%),
+                  radial-gradient(900px 400px at 10% 0%, rgba(16,185,129,.18), transparent 60%),
+                  linear-gradient(180deg, #FFFFFF, var(--bg));
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Tahoma, Arial, "Noto Kufi Arabic", "Noto Sans Arabic", sans-serif;
+      line-height:1.75;
+    }
+    .container{ width:min(var(--max), calc(100% - 32px)); margin-inline:auto; }
+    .nav{
+      position:sticky; top:0; z-index:30;
+      background:rgba(247,248,251,.78); backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--border);
+    }
+    .nav-inner{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; }
+    .brand{ display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
+    
+    .logo{
+  width: 50px;; 
+  height: 50px;; 
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;     /* مهم جدًا */
+}
+
+.logo img{
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+    .brand .title{ display:flex; flex-direction:column; line-height:1.2; }
+    .brand .title strong{ font-size:15px; }
+    .brand .title span{ font-size:12px; color:var(--muted); }
+
+    .nav-links{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
+
+    .btn{
+      border:1px solid var(--border); background:#fff; color:var(--text);
+      padding:10px 14px; border-radius:999px; cursor:pointer; font-weight:700;
+      display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, background .12s ease, opacity .12s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 25px rgba(15,23,42,.08); border-color:#cbd5e1; }
+    .btn:active{ transform:translateY(0); box-shadow:none; }
+    .btn.primary{
+      background:linear-gradient(135deg, var(--secondary), #4F46E5);
+      border-color:transparent; color:#fff; box-shadow:0 12px 30px rgba(99,102,241,.25);
+    }
+    .btn.primary:hover{ box-shadow:0 14px 34px rgba(99,102,241,.30); }
+    .btn.ghost{ background:transparent; border-color:transparent; color:var(--muted); }
+    .btn.ghost:hover{ background:rgba(255,255,255,.85); border-color:var(--border); color:var(--text); }
+    .btn.small{ padding:8px 12px; font-size:13px; }
+    .btn.danger{ background:rgba(239,68,68,.08); border-color:rgba(239,68,68,.20); color:#991b1b; }
+    .btn.success{ background:rgba(16,185,129,.10); border-color:rgba(16,185,129,.25); color:#0f766e; }
+
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px; border-radius:999px;
+      background:#fff; border:1px solid var(--border); box-shadow:var(--shadow);
+      font-size:12px; font-weight:800; color:var(--muted);
+    }
+    .chip b{ color:var(--text); }
+
+    .hero{
+      background:var(--heroGrad);
+      border-bottom:1px solid var(--border);
+      padding:30px 0 12px;
+    }
+    .hero-grid{
+      display:grid; grid-template-columns:1.25fr .75fr;
+      gap:14px; align-items:stretch; padding:18px 0 26px;
+    }
+    .hero-card{
+      background:rgba(255,255,255,.78); border:1px solid var(--border);
+      border-radius:var(--radius); padding:22px; box-shadow:var(--shadow);
+    }
+    h1{ margin:0 0 10px; font-size:clamp(24px, 3.2vw, 40px); line-height:1.25; letter-spacing:-.4px; }
+    .hero p{ margin:0 0 14px; color:var(--muted); font-size:15px; }
+    .hero-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .mini-stats{ display:grid; gap:12px; }
+    .stat{
+      background:#fff; border:1px solid var(--border); border-radius:var(--radius);
+      padding:18px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+    }
+    .stat::before{
+      content:""; position:absolute; inset:-40px -40px auto auto; width:140px; height:140px;
+      border-radius:999px; background:radial-gradient(circle at 30% 30%, rgba(16,185,129,.20), transparent 60%);
+      transform:rotate(20deg);
+    }
+    .stat strong{ display:block; font-size:18px; margin-bottom:4px; }
+    .stat span{ color:var(--muted); font-size:13px; }
+
+    section{ padding:18px 0; }
+    .section-title{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:12px; }
+    .section-title h2{ margin:0; font-size:18px; letter-spacing:-.2px; }
+    .section-title p{ margin:0; color:var(--muted); font-size:13px; }
+
+    .grid-3{ display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
+    .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+    .card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:var(--pad); box-shadow:var(--shadow); }
+    .card h3{ margin:0 0 6px; font-size:15px; }
+    .card p{ margin:0; color:var(--muted); font-size:13px; }
+
+    .step{ display:flex; gap:12px; align-items:flex-start; }
+    .icon{
+      width:42px; height:42px; border-radius:14px;
+      background:rgba(99,102,241,.12); border:1px solid rgba(99,102,241,.25);
+      display:grid; place-items:center; color:var(--secondary); font-weight:900; flex:0 0 auto;
+    }
+
+    .timeline{ display:grid; gap:12px; }
+    .trow{ display:grid; grid-template-columns:64px 1fr; gap:12px; align-items:stretch; }
+    .tleft{ display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding-top:4px; }
+    .tdot{
+      width:42px; height:42px; border-radius:14px;
+      background:linear-gradient(135deg, rgba(99,102,241,.15), rgba(16,185,129,.12));
+      border:1px solid var(--border); display:grid; place-items:center; font-weight:900; color:var(--primary);
+      box-shadow:var(--shadow);
+    }
+    .tline{ width:2px; flex:1; background:linear-gradient(180deg, rgba(99,102,241,.45), rgba(16,185,129,.35)); border-radius:99px; margin-top:8px; }
+
+    .toolbar{
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+      margin:10px 0 12px;
+    }
+    .search{
+      display:flex; align-items:center; gap:8px;
+      background:#fff; border:1px solid var(--border); border-radius:999px; padding:8px 12px;
+      min-width:min(520px, 100%); box-shadow:var(--shadow);
+    }
+    .search input{ border:none; outline:none; width:100%; font-size:14px; background:transparent; color:var(--text); }
+
+    select{
+      border:1px solid var(--border); background:#fff; border-radius:999px;
+      padding:10px 12px; font-weight:750; box-shadow:var(--shadow); cursor:pointer; outline:none;
+    }
+
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+      margin:6px 0 12px;
+    }
+    .tab{
+      padding:8px 12px; border-radius:999px;
+      border:1px solid var(--border); background:#fff; box-shadow:var(--shadow);
+      font-weight:800; font-size:12px; cursor:pointer; color:var(--muted);
+    }
+    .tab.active{
+      color:#fff; border-color:transparent;
+      background:linear-gradient(135deg, var(--secondary), #4F46E5);
+      box-shadow:0 14px 30px rgba(99,102,241,.25);
+    }
+
+    .tasks-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
+    .task-card{ position:relative; overflow:hidden; }
+    .task-card::after{
+      content:""; position:absolute; inset:auto -40px -55px -40px; height:120px;
+      background:radial-gradient(220px 120px at 50% 30%, rgba(99,102,241,.18), transparent 60%);
+      pointer-events:none;
+    }
+
+    .pill-row{ display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 12px; }
+    .pill{
+      font-size:12px; padding:6px 10px; border-radius:999px;
+      border:1px solid var(--border); background:rgba(248,250,252,.95);
+      color:var(--muted); font-weight:800;
+    }
+    .pill.good{ border-color:rgba(16,185,129,.35); background:rgba(16,185,129,.10); color:#0f766e; }
+    .pill.mid{ border-color:rgba(99,102,241,.35); background:rgba(99,102,241,.10); color:#3730a3; }
+    .pill.hard{ border-color:rgba(239,68,68,.25); background:rgba(239,68,68,.08); color:#991b1b; }
+    .pill.reviewed{ border-color:rgba(99,102,241,.35); background:rgba(99,102,241,.10); color:#3730a3; }
+    .pill.needs{ border-color:rgba(239,68,68,.25); background:rgba(239,68,68,.08); color:#991b1b; }
+
+    .task-title{ margin:0 0 6px; font-weight:900; font-size:15px; }
+    .task-desc{ margin:0 0 12px; color:var(--muted); font-size:13px; min-height:44px; }
+    .task-footer{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:6px; position:relative; z-index:2; }
+    .meta{ font-size:12px; color:var(--muted); font-weight:800; }
+
+    .view{ display:none; }
+    .view.active{ display:block; }
+
+    .backdrop{
+      position:fixed; inset:0; background:rgba(15,23,42,.55);
+      display:none; align-items:center; justify-content:center; padding:18px; z-index:60;
+    }
+    .backdrop.show{ display:flex; }
+    .modal{
+      width:min(900px, 100%); background:#fff; border:1px solid var(--border);
+      border-radius:22px; box-shadow:0 30px 80px rgba(0,0,0,.25); overflow:hidden;
+      animation:pop .18s ease;
+    }
+    @keyframes pop{ from{ transform:translateY(10px); opacity:.7 } to{ transform:translateY(0); opacity:1 } }
+    .modal-head{
+      padding:18px 18px 14px; border-bottom:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(99,102,241,.08), rgba(16,185,129,.06));
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    }
+    .modal-head h3{ margin:0; font-size:17px; letter-spacing:-.2px; }
+    .modal-head p{ margin:6px 0 0; color:var(--muted); font-size:13px; }
+    .modal-body{ padding:18px; }
+    .modal-grid{ display:grid; grid-template-columns:1.15fr .85fr; gap:12px; }
+    .panel{ background:#fff; border:1px solid var(--border); border-radius:18px; padding:14px; }
+    .panel h4{ margin:0 0 8px; font-size:14px; }
+    .panel ul{ margin:0; padding:0 18px 0 0; color:var(--muted); font-size:13px; }
+    .panel li{ margin:6px 0; }
+
+    .upload{ display:grid; gap:10px; }
+    .upload textarea{
+      width:100%; min-height:110px; border-radius:16px; border:1px solid var(--border);
+      padding:12px; outline:none; resize:vertical; font-family:inherit; font-size:14px;
+    }
+    .upload input[type="file"]{
+      width:100%; border:1px dashed #cbd5e1; border-radius:16px; padding:12px;
+      background:rgba(248,250,252,.95); cursor:pointer;
+    }
+    .modal-foot{
+      padding:14px 18px 18px; border-top:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+    .note{ color:var(--muted); font-size:12px; font-weight:800; }
+
+    .toast{
+      position:fixed; bottom:18px; inset-inline:18px; margin-inline:auto;
+      width:min(780px, calc(100% - 36px)); background:#fff; border:1px solid var(--border);
+      border-radius:18px; padding:12px 14px; box-shadow:0 20px 60px rgba(15,23,42,.18);
+      display:none; align-items:center; justify-content:space-between; gap:12px; z-index:70;
+    }
+    .toast.show{ display:flex; }
+
+    .onboard{
+      width:min(720px, 100%); background:#fff; border:1px solid var(--border);
+      border-radius:22px; box-shadow:0 30px 80px rgba(0,0,0,.25); overflow:hidden;
+      animation:pop .18s ease;
+    }
+    .form{ display:grid; gap:10px; }
+    .form .row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .field{ display:grid; gap:6px; }
+    .field label{ font-size:12px; font-weight:900; color:var(--muted); }
+    .field input{
+      border:1px solid var(--border); border-radius:16px; padding:12px;
+      outline:none; font-size:14px; background:#fff;
+    }
+    .role-pills{ display:flex; gap:8px; flex-wrap:wrap; }
+    .role{
+      border:1px solid var(--border); background:#fff; color:var(--muted);
+      padding:10px 14px; border-radius:999px; cursor:pointer; font-weight:900;
+      box-shadow:var(--shadow);
+    }
+    .role.active{
+      color:#fff; border-color:transparent;
+      background:linear-gradient(135deg, var(--secondary), #4F46E5);
+      box-shadow:0 14px 30px rgba(99,102,241,.25);
+    }
+
+    table{ width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:16px; border:1px solid var(--border); background:#fff; box-shadow:var(--shadow); }
+    th, td{ padding:12px; text-align:right; font-size:13px; }
+    th{ background:rgba(248,250,252,.95); color:var(--muted); font-weight:900; border-bottom:1px solid var(--border); }
+    td{ border-bottom:1px solid var(--border); vertical-align:top; }
+    tr:last-child td{ border-bottom:none; }
+    .muted{ color:var(--muted); }
+    .right-actions{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-start; }
+
+    footer{ padding:22px 0 30px; color:var(--muted); font-size:12px; }
+    .footer-grid{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; border-top:1px solid var(--border); padding-top:14px; }
+
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns:1fr; }
+      .grid-3, .grid-2{ grid-template-columns:1fr; }
+      .tasks-grid{ grid-template-columns:1fr; }
+      .modal-grid{ grid-template-columns:1fr; }
+      .search{ min-width:100%; }
+      .form .row{ grid-template-columns:1fr; }
+      .trow{ grid-template-columns:56px 1fr; }
+      
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <div class="nav">
+    <div class="container nav-inner">
+      <div class="brand" id="goHome" title="العودة للرئيسية">
+<div class="logo">
+  <img src="WhatsApp Image 2025-12-24 at 10.41.44 AM.jpeg" alt="شعار المنصة">
+</div>
+
+        <div class="title">
+          <strong>هاش للذكاء الاصطناعي  </strong>
+          <span id="subtitle"> نقد حقيقي. تدريب حقيقي. أثر حقيقي.     </span>
+        </div>
+      </div>
+
+      <div class="nav-links">
+        <span class="chip" id="userChip" style="display:none;">👤 <b id="userNameChip">—</b> • <span id="userRoleChip">—</span></span>
+        <button class="btn ghost" data-view="homeView">الرئيسية</button>
+        <button class="btn ghost" data-view="howView">كيف تعمل؟</button>
+        <button class="btn ghost" data-view="tasksView">المهام</button>
+        <button class="btn ghost" data-view="dashboardView" id="navDashboard" style="display:none;">لوحة الطالب</button>
+        <button class="btn ghost" data-view="adminView" id="navAdmin" style="display:none;">لوحة المشرف</button>
+        <button class="btn primary" id="startNow">ابدأ الآن</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOME VIEW -->
+  <main class="view active" id="homeView">
+    <header class="hero">
+      <div class="container hero-grid">
+        <div class="hero-card">
+          <h1>حوّل النقد الإعلامي إلى تدريب عملي حقيقي</h1>
+          <p>
+            منصة تعليمية تعتمد على آراء حقيقية من السوق، وتحولها إلى مهام تدريبية واضحة تحاكي بيئة العمل الإعلامي —
+            بدون درجات ولا ضغط. الهدف: مهارات ومخرجات قابلة للعرض في ملفك المهني.
+          </p>
+          <div class="hero-actions">
+            <button class="btn primary" data-view="tasksView">استعرض المهام</button>
+            <button class="btn" data-view="howView">شاهد كيف تعمل</button>
+            <button class="btn" id="openDemoTask">افتح مهمة تجريبية</button>
+          </div>
+        </div>
+
+        <div class="mini-stats">
+          <div class="stat">
+            <strong id="statTasks">—</strong>
+            <span>عدد المهام المتاحة في النموذج</span>
+          </div>
+          <div class="stat">
+            <strong>بدون منافسة</strong>
+            <span>في الـ MVP نركز على التعلم قبل النقاط والترتيب</span>
+          </div>
+          <div class="stat">
+            <strong>Portfolio-ready</strong>
+            <span>كل مهمة لها مخرج واضح يمكنك عرضه</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>لماذا هذه الفكرة قوية في العرض؟</h2>
+            <p>قصة بسيطة: تعليق سلبي → مهمة → تسليم → مراجعة</p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>تحويل السلبي إلى قيمة</h3>
+            <p>بدل ما يكون النقد مجرد ضجيج، يصبح مادة تدريبية تصقل المهارات وتبني الخبرة.</p>
+          </div>
+          <div class="card">
+            <h3>محاكاة سوق العمل</h3>
+            <p>المهام تشبه الواقع: تحسين عنوان، ضبط نبرة، إخراج بصري، بروتوكول تواصل… إلخ.</p>
+          </div>
+          <div class="card">
+            <h3>تنفيذ سريع (MVP)</h3>
+            <p>نقدر نعرض نسخة شغّالة خلال أيام: قائمة مهام + تسليم + مراجعة مبسطة.</p>
+          </div>
+          <div class="card">
+            <h3>قابلة للتوسع</h3>
+            <p>بعد الإعلام يمكن نقل نفس المنهج لتخصصات أخرى مثل التسويق والعلاقات العامة.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- HOW VIEW -->
+  <section class="view" id="howView">
+    <div class="container">
+      <div class="section-title">
+        <div>
+          <h2>كيف تعمل منصة أَثَر؟ (Story)</h2>
+          <p>Timeline واضح — ممتاز للشرح في Pitch</p>
+        </div>
+        <button class="btn" data-view="tasksView">استعرض المهام</button>
+      </div>
+
+      <div class="card timeline">
+        <div class="trow">
+          <div class="tleft">
+            <div class="tdot">1</div>
+            <div class="tline"></div>
+          </div>
+          <div class="panel">
+            <h4>تعليق / ملاحظة من الجمهور</h4>
+            <p class="muted" style="margin:0">
+              مثال: “الإخراج مزدحم… العنوان مبالغ… الردود متأخرة…”
+            </p>
+          </div>
+        </div>
+
+        <div class="trow">
+          <div class="tleft">
+            <div class="tdot">2</div>
+            <div class="tline"></div>
+          </div>
+          <div class="panel">
+            <h4>تحليل وتصنيف وتحويل إلى مهمة</h4>
+            <p class="muted" style="margin:0">
+              NLP يصنّف المشكلة (تصميم/إخراج/محتوى/تواصل) ويولّد مهمة مع المطلوب ومعايير نجاح مبسطة.
+            </p>
+          </div>
+        </div>
+
+        <div class="trow">
+          <div class="tleft">
+            <div class="tdot">3</div>
+          </div>
+          <div class="panel">
+            <h4>تسليم + مراجعة تعليمية</h4>
+            <p class="muted" style="margin:0">
+              الطالب يرفع المخرج (نص/تصميم/خطة)، ثم يستلم ملاحظة مراجعة “Reviewed” أو “Needs Improvement”.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-top:12px;">
+        <div class="card step">
+          <div class="icon">A</div>
+          <div>
+            <h3>بدون ضغط</h3>
+            <p>في البداية لا نقاط ولا ترتيب… نركز على تعلم حقيقي وعادل.</p>
+          </div>
+        </div>
+        <div class="card step">
+          <div class="icon">B</div>
+          <div>
+            <h3>مخرجات واضحة</h3>
+            <p>كل مهمة لها Deliverable محدد يصلح للـ Portfolio.</p>
+          </div>
+        </div>
+        <div class="card step">
+          <div class="icon">C</div>
+          <div>
+            <h3>قابل للتوسع</h3>
+            <p>إضافة مشرفين/جامعات/شهادات لاحقًا بدون تغيير الفكرة الأساسية.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TASKS VIEW -->
+  <section class="view" id="tasksView">
+    <div class="container">
+      <div class="section-title">
+        <div>
+          <h2>المهام التدريبية</h2>
+          <p>بحث + فلترة + تبويبات حالة + فتح مهمة + تسليم</p>
+        </div>
+        <div class="right-actions">
+          <button class="btn" id="genFromCommentBtn">✨ توليد مهمة من تعليق</button>
+          <button class="btn" data-view="dashboardView" id="goDashBtn" style="display:none;">اذهب للوحة الطالب</button>
+          <button class="btn primary" id="newTaskCTA">ابدأ الآن</button>
+        </div>
+      </div>
+
+      <div class="tabs" id="statusTabs">
+        <button class="tab active" data-status="all">الكل</button>
+        <button class="tab" data-status="saved">محفوظة ⭐</button>
+        <button class="tab" data-status="submitted">تم الإرسال ✅</button>
+        <button class="tab" data-status="reviewed">تمت المراجعة 🟣</button>
+        <button class="tab" data-status="needs">بحاجة تحسين 🔴</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="search">
+          🔎 <input id="q" type="search" placeholder="ابحث: عنوان، تصنيف، أو كلمة من الوصف…" autocomplete="off" />
+        </div>
+
+        <div class="right-actions">
+          <select id="category">
+            <option value="all">كل التصنيفات</option>
+          </select>
+          <select id="difficulty">
+            <option value="all">كل المستويات</option>
+            <option value="سهل">سهل</option>
+            <option value="متوسط">متوسط</option>
+            <option value="صعب">صعب</option>
+          </select>
+          <button class="btn small" id="reset">إعادة ضبط</button>
+        </div>
+      </div>
+
+      <div class="tasks-grid" id="tasksGrid"></div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD VIEW -->
+  <section class="view" id="dashboardView">
+    <div class="container">
+      <div class="section-title">
+        <div>
+          <h2>لوحة الطالب</h2>
+          <p>رحلة المستخدم كاملة: مهامك + الحالة + إعادة رفع</p>
+        </div>
+        <div class="right-actions">
+          <button class="btn" data-view="tasksView">استعراض المهام</button>
+          <button class="btn danger" id="logoutBtn">تسجيل خروج</button>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>قيد التنفيذ</h3>
+          <p class="muted">مهام محفوظة ولم تُرسل بعد</p>
+          <div style="margin-top:10px; font-weight:900; font-size:18px;" id="dashInProgress">—</div>
+        </div>
+        <div class="card">
+          <h3>تم الإرسال</h3>
+          <p class="muted">بانتظار مراجعة المشرف</p>
+          <div style="margin-top:10px; font-weight:900; font-size:18px;" id="dashSubmitted">—</div>
+        </div>
+        <div class="card">
+          <h3>مراجعة مكتملة</h3>
+          <p class="muted">تمت المراجعة أو بحاجة تحسين</p>
+          <div style="margin-top:10px; font-weight:900; font-size:18px;" id="dashReviewed">—</div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:16px;">
+        <div>
+          <h2>مهامي</h2>
+          <p>يعرض آخر المهام المرتبطة بحسابك التجريبي</p>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:120px;">المعرف</th>
+            <th>المهمة</th>
+            <th style="width:160px;">الحالة</th>
+            <th style="width:220px;">إجراء</th>
+          </tr>
+        </thead>
+        <tbody id="dashTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ADMIN VIEW -->
+  <section class="view" id="adminView">
+    <div class="container">
+      <div class="section-title">
+        <div>
+          <h2>لوحة المشرف (Admin Light)</h2>
+          <p>إضافة مهمة + مشاهدة التسليمات + مراجعة</p>
+        </div>
+        <div class="right-actions">
+          <button class="btn" data-view="tasksView">عرض الموقع كطالب</button>
+          <button class="btn danger" id="logoutAdminBtn">تسجيل خروج</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>إضافة مهمة جديدة (Demo)</h3>
+          <p class="muted">في النسخة الحقيقية: تتحول من Feedback عبر NLP</p>
+
+          <div class="form" style="margin-top:12px;">
+            <div class="field">
+              <label>عنوان المهمة</label>
+              <input id="adminTitle" placeholder="مثال: تحسين نبرة منشور…" />
+            </div>
+            <div class="row">
+              <div class="field">
+                <label>التصنيف</label>
+                <input id="adminCategory" placeholder="مثال: تحرير المحتوى" />
+              </div>
+              <div class="field">
+                <label>المستوى (سهل/متوسط/صعب)</label>
+                <input id="adminDifficulty" placeholder="متوسط" />
+              </div>
+            </div>
+            <div class="field">
+              <label>وصف مختصر</label>
+              <input id="adminDesc" placeholder="وصف يظهر في بطاقة المهمة" />
+            </div>
+            <div class="field">
+              <label>وصف المشكلة</label>
+              <input id="adminProblem" placeholder="تفاصيل المشكلة كما يفهمها الطالب" />
+            </div>
+            <button class="btn primary" id="adminAddTask">إضافة المهمة</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>إحصائيات سريعة</h3>
+          <div class="grid-2" style="margin-top:12px;">
+            <div class="panel">
+              <h4 style="margin:0 0 6px;">عدد التسليمات</h4>
+              <div style="font-weight:900; font-size:20px;" id="adminSubCount">—</div>
+            </div>
+            <div class="panel">
+              <h4 style="margin:0 0 6px;">معلقة للمراجعة</h4>
+              <div style="font-weight:900; font-size:20px;" id="adminPendingCount">—</div>
+            </div>
+          </div>
+          <p class="muted" style="margin-top:10px;">* هذا Demo: مستخدم واحد تجريبي يرسل تسليمات.</p>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:16px;">
+        <div>
+          <h2>التسليمات</h2>
+          <p>اكتب ملاحظة وحدد الحالة: Reviewed أو Needs Improvement</p>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:120px;">المعرف</th>
+            <th>الطالب</th>
+            <th>المهمة</th>
+            <th style="width:160px;">الحالة</th>
+            <th>الملاحظة</th>
+            <th style="width:200px;">إجراء</th>
+          </tr>
+        </thead>
+        <tbody id="adminTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-grid">
+      <div>© هاش للذكاء الاصطناعي — نموذج أولي للعرض</div>
+      <div>يشمل: Onboarding + Tasks + Student Dashboard + Admin Review + Demo NLP</div>
+    </div>
+  </footer>
+
+  <!-- TASK MODAL -->
+  <div class="backdrop" id="backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <div>
+          <h3 id="modalTitle">—</h3>
+          <p id="modalSubtitle">—</p>
+          <div class="pill-row" id="modalPills"></div>
+        </div>
+        <button class="btn small" id="closeModal">إغلاق ✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-grid">
+          <div class="panel">
+            <h4>وصف المشكلة</h4>
+            <p id="modalProblem" style="margin:0;color:var(--muted);font-size:13px;"></p>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;" />
+
+            <h4>المطلوب (Deliverable)</h4>
+            <ul id="modalDeliverables"></ul>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;" />
+
+            <h4>معايير نجاح بسيطة</h4>
+            <ul id="modalCriteria"></ul>
+          </div>
+
+          <div class="panel upload">
+            <h4>التسليم</h4>
+            <textarea id="submissionText" placeholder="اكتب ملخص الحل أو الخطوات التي نفذتها…"></textarea>
+            <input id="submissionFile" type="file" />
+            <button class="btn primary" id="submitTask">إرسال المهمة</button>
+
+            <div class="note" id="taskHint">
+              * في الـ MVP: يتم حفظ التسليم محليًا ويظهر في لوحة الطالب.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-foot">
+        <div class="note" id="modalFooterNote">—</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn" id="markSaved">حفظ للمراجعة لاحقًا ⭐</button>
+          <button class="btn" id="copyTask">نسخ تفاصيل المهمة</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS / REVIEW MODAL -->
+  <div class="backdrop" id="successBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="successTitle" style="width:min(780px,100%);">
+      <div class="modal-head">
+        <div>
+          <h3 id="successTitle">تم إرسال المهمة ✅</h3>
+          <p id="successSub">تم حفظ التسليم بشكل تجريبي، ويمكن للمشرف إضافة مراجعة من لوحة المشرف.</p>
+        </div>
+        <button class="btn small" id="closeSuccess">إغلاق ✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="grid-2">
+          <div class="panel">
+            <h4>ملخص التسليم</h4>
+            <p id="successSummary" class="muted" style="margin:0;"></p>
+          </div>
+          <div class="panel">
+            <h4>الخطوة التالية</h4>
+            <ul>
+              <li>اذهب إلى <b>لوحة الطالب</b> لمتابعة الحالة.</li>
+              <li>إذا ظهرت الحالة <b>Needs Improvement</b> يمكنك إعادة رفع نسخة محسّنة.</li>
+              <li>للعرض: افتح <b>لوحة المشرف</b> واكتب مراجعة.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <div class="note">* هذا Prototype — لا يوجد إرسال فعلي إلى خادم.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn" data-view="dashboardView" id="goDashFromSuccess">اذهب للوحة الطالب</button>
+          <button class="btn" data-view="adminView" id="goAdminFromSuccess">اذهب للوحة المشرف</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONBOARDING MODAL -->
+  <div class="backdrop show" id="onboardBackdrop" aria-hidden="false">
+    <div class="onboard" role="dialog" aria-modal="true" aria-labelledby="onboardTitle">
+      <div class="modal-head">
+        <div>
+          <h3 id="onboardTitle">ابدأ الآن (تجريبي)</h3>
+          <p>اختر دورك وادخل بيانات بسيطة — بدون تسجيل حقيقي</p>
+        </div>
+        <button class="btn small" id="skipOnboard">تصفح كضيف ✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="panel">
+          <h4>اختر الدور</h4>
+          <div class="role-pills" style="margin-top:8px;">
+            <button class="role active" data-role="student">طالب</button>
+            <button class="role" data-role="admin">مشرف</button>
+          </div>
+
+          <div class="form" style="margin-top:14px;">
+            <div class="row">
+              <div class="field">
+                <label>الاسم</label>
+                <input id="onName" placeholder="مثال: صالح" />
+              </div>
+              <div class="field">
+                <label>الجامعة (اختياري)</label>
+                <input id="onUni" placeholder="مثال: جامعة الملك سعود" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label>ملاحظة</label>
+              <input disabled value="هذا نموذج أولي للعرض — البيانات تُحفظ محليًا في المتصفح فقط." />
+            </div>
+
+            <button class="btn primary" id="enterApp">دخول</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <div class="note">نصيحة عرض: جرّب كـ “طالب” ثم افتح “لوحة المشرف” وراجع تسليمك.</div>
+        <button class="btn" id="demoFill">تعبئة بيانات تجريبية</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GENERATE TASK MODAL -->
+  <div class="backdrop" id="genBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="genTitle" style="width:min(820px,100%);">
+      <div class="modal-head">
+        <div>
+          <h3 id="genTitle">✨ توليد مهمة من تعليق (Demo NLP)</h3>
+          <p>اكتب تعليقًا سلبيًا أو ملاحظة من الجمهور، وسنحوّله إلى مهمة تدريبية جاهزة.</p>
+        </div>
+        <button class="btn small" id="closeGen">إغلاق ✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid-2">
+          <div class="panel">
+            <h4>اكتب التعليق</h4>
+            <textarea id="genComment" placeholder="مثال: الإخراج مزدحم والعنوان مبالغ والردود متأخرة..." style="min-height:140px;"></textarea>
+
+            <div class="right-actions" style="margin-top:10px;">
+              <button class="btn" id="fillExample1">تجربة مثال 1</button>
+              <button class="btn" id="fillExample2">تجربة مثال 2</button>
+              <button class="btn" id="fillExample3">تجربة مثال 3</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h4>المعاينة (Preview)</h4>
+            <div class="pill-row" id="genPreviewPills"></div>
+            <div style="font-weight:900; margin-top:6px;" id="genPreviewTitle">—</div>
+            <div class="muted" style="margin-top:6px;" id="genPreviewDesc">—</div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;" />
+
+            <div class="muted">
+              * هذا “Demo NLP” يعتمد على كلمات مفتاحية لتحديد التصنيف والمستوى.
+              في النسخة الحقيقية يمكن ربطه بنموذج NLP/LLM.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-foot">
+        <div class="note">سيتم إضافة المهمة مباشرة لقائمة المهام.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn primary" id="genCreateTask">إنشاء المهمة وإضافتها</button>
+          <button class="btn" id="genOnlyPreview">تحديث المعاينة</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <div>
+      <strong id="toastTitle">—</strong><br />
+      <span id="toastMsg">—</span>
+    </div>
+    <button class="btn small" id="toastClose">حسنًا</button>
+  </div>
+
+<script>
+/** =========================
+ *  بيانات تجريبية (Tasks)
+ *  ========================= **/
+let TASKS = [
+  {
+    id:"T-001",
+    title:"تحسين عنوان خبر لزيادة الوضوح",
+    category:"تحرير المحتوى",
+    difficulty:"سهل",
+    desc:"وصلت ملاحظات أن العنوان غير واضح ويحتوي مبالغة. المطلوب صياغة عنوانين بديلين أكثر دقة.",
+    problem:"بعض التعليقات ترى أن العنوان الحالي “مثير” لكنه لا يعكس محتوى الخبر بدقة، مما يقلل الثقة ويؤثر على التفاعل.",
+    deliverables:["صياغة عنوانين بديلين (قصير + متوسط).","شرح مختصر: لماذا كل عنوان أفضل؟"],
+    criteria:["وضوح الفكرة دون مبالغة.","محافظة على المعنى الأساسي للخبر.","لغة سليمة وسهلة القراءة."],
+    sourceHint:"مستخرج من ملاحظات عامة (تم إخفاء المصدر حفاظًا على الخصوصية)."
+  },
+  {
+    id:"T-002",
+    title:"إعادة ضبط نبرة منشور لمنصات التواصل",
+    category:"كتابة منصات",
+    difficulty:"متوسط",
+    desc:"ملاحظات الجمهور تقول إن نبرة المنشور رسمية جدًا. عدّل النص ليكون أخف وأكثر قربًا.",
+    problem:"الجمهور يفضّل نبرة أخف وأسرع على منصات التواصل. النص الحالي يبدو “بيان رسمي” ويقلل من التفاعل.",
+    deliverables:["إعادة كتابة المنشور (نسختين: تويتر + إنستغرام).","اقتراح CTA بسيط (دعوة لاتخاذ إجراء)."],
+    criteria:["نبرة مناسبة للمنصة.","وضوح الرسالة خلال ثوانٍ.","CTA بسيط وغير مزعج."],
+    sourceHint:"مستخرج من تعليقات عامة على محتوى مشابه."
+  },
+  {
+    id:"T-003",
+    title:"تحسين الإخراج البصري لقالب خبر",
+    category:"إخراج وتصميم",
+    difficulty:"متوسط",
+    desc:"الجمهور يرى أن الإخراج مزدحم. اقترح تعديلات على التباعد والتسلسل البصري.",
+    problem:"التصميم الحالي يحتوي عناصر كثيرة ومسافات ضيقة، مما يسبب تشتيت ويقلل من فهم الرسالة بسرعة.",
+    deliverables:["قائمة تعديلات (مسافات/خطوط/تسلسل).","رسم تخطيطي بسيط (Wireframe) أو وصف مرئي."],
+    criteria:["تسلسل بصري واضح.","تقليل التشتيت وتحسين القراءة.","حلول قابلة للتنفيذ وليست عامة."],
+    sourceHint:"مستخرج من نقد متعلق بتجربة القراءة."
+  },
+  {
+    id:"T-004",
+    title:"تنقيح نص إعلامي لتقليل الالتباس",
+    category:"تحرير المحتوى",
+    difficulty:"صعب",
+    desc:"ملاحظات تشير أن النص يسبب سوء فهم بسبب مصطلحات غير محددة. أعد كتابته بلغة دقيقة.",
+    problem:"استخدام مصطلحات غير معرفة يفتح الباب لتفسيرات متعددة، وهذا يضعف الرسالة الإعلامية ويزيد النقد.",
+    deliverables:["إعادة كتابة النص بصياغة دقيقة ومختصرة.","تحديد 3 مصطلحات حساسة واستبدالها أو تعريفها."],
+    criteria:["تقليل احتمالية سوء الفهم.","الاقتصاد في الكلمات مع وضوح كامل.","لغة مهنية متوازنة."],
+    sourceHint:"مستخرج من ملاحظات على وضوح النصوص."
+  },
+  {
+    id:"T-005",
+    title:"اقتراح بروتوكول تحسين تواصل فريق إعلامي",
+    category:"إدارة وتواصل",
+    difficulty:"سهل",
+    desc:"يوجد نقد بأن الردود متأخرة وغير منظمة. صمّم SLA بسيط + قوالب ردود.",
+    problem:"عندما يتأخر الرد أو يكون غير واضح، يشعر الجمهور بالتجاهل. المطلوب نظام بسيط يرفع جودة التواصل.",
+    deliverables:["SLA مبسط (مثال: خلال 2 ساعة/24 ساعة).","3 قوالب رد جاهزة (استفسار/شكوى/اقتراح)."],
+    criteria:["بساطة وسهولة تطبيق.","وضوح النبرة واحترام الجمهور.","واقعية في الزمن المقترح."],
+    sourceHint:"مستخرج من نقد متعلق بسرعة الاستجابة."
+  },
+  {
+    id:"T-006",
+    title:"تحليل سبب انخفاض التفاعل واقتراح تدخل أسبوعي",
+    category:"تحليل أداء",
+    difficulty:"صعب",
+    desc:"التفاعل انخفض فجأة. اقترح 3 فرضيات قابلة للاختبار وخطة تدخل لمدة أسبوع بمؤشرات قياس.",
+    problem:"بدون تحليل منظم، يصبح اتخاذ القرار عشوائي. المطلوب فرضيات واضحة وخطة تدخل قصيرة قابلة للقياس.",
+    deliverables:["3 فرضيات (سبب محتمل + كيف نتحقق).","خطة أسبوع: 3 إجراءات + مؤشر قياس لكل إجراء."],
+    criteria:["فرضيات منطقية وقابلة للاختبار.","إجراءات محددة وليست عامة.","مؤشرات قياس واضحة."],
+    sourceHint:"مستخرج من ملاحظات حول تراجع التفاعل."
+  }
+];
+
+/** =========================
+ *  State
+ *  ========================= **/
+let state = {
+  q:"",
+  category:"all",
+  difficulty:"all",
+  statusTab:"all", // all|saved|submitted|reviewed|needs
+  activeTask:null,
+
+  saved:new Set(),             // taskIds
+  submissions:[],              // {taskId, studentName, studentUni, text, fileName, submittedAt, status, reviewerNote}
+  user:{ role:"guest", name:"ضيف", uni:"" }
+};
+
+/** =========================
+ *  Utils
+ *  ========================= **/
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+function showToast(title, msg){
+  $("#toastTitle").textContent = title;
+  $("#toastMsg").textContent = msg;
+  $("#toast").classList.add("show");
+}
+function hideToast(){ $("#toast").classList.remove("show"); }
+
+function switchView(id){
+  $$(".view").forEach(v => v.classList.remove("active"));
+  const el = document.getElementById(id);
+  if(el) el.classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function pillForDifficulty(level){
+  if(level === "سهل") return `<span class="pill good">سهل</span>`;
+  if(level === "متوسط") return `<span class="pill mid">متوسط</span>`;
+  return `<span class="pill hard">صعب</span>`;
+}
+function statusPillForTask(taskId){
+  const s = state.submissions.find(x => x.taskId === taskId && x.studentName === state.user.name);
+  if(!s) return "";
+  if(s.status === "submitted") return `<span class="pill good">تم الإرسال</span>`;
+  if(s.status === "reviewed") return `<span class="pill reviewed">تمت المراجعة</span>`;
+  if(s.status === "needs") return `<span class="pill needs">بحاجة تحسين</span>`;
+  return "";
+}
+
+function normalize(s){ return (s||"").toLowerCase(); }
+
+function closeBackdrop(backdropId){
+  const el = document.getElementById(backdropId);
+  el.classList.remove("show");
+  el.setAttribute("aria-hidden", "true");
+}
+function openBackdrop(backdropId){
+  const el = document.getElementById(backdropId);
+  el.classList.add("show");
+  el.setAttribute("aria-hidden", "false");
+}
+
+/** =========================
+ *  Filters + Render Tasks
+ *  ========================= **/
+function initFilters(){
+  const categories = Array.from(new Set(TASKS.map(t => t.category))).sort();
+  const sel = $("#category");
+  sel.innerHTML = `<option value="all">كل التصنيفات</option>`;
+  categories.forEach(c=>{
+    const opt = document.createElement("option");
+    opt.value=c; opt.textContent=c;
+    sel.appendChild(opt);
+  });
+  $("#statTasks").textContent = `${TASKS.length} مهام`;
+}
+
+function matchesStatusTab(taskId){
+  const saved = state.saved.has(taskId);
+  const sub = state.submissions.find(s => s.taskId === taskId && s.studentName === state.user.name);
+
+  switch(state.statusTab){
+    case "saved": return saved;
+    case "submitted": return !!sub && sub.status === "submitted";
+    case "reviewed": return !!sub && sub.status === "reviewed";
+    case "needs": return !!sub && sub.status === "needs";
+    default: return true;
+  }
+}
+
+function getFilteredTasks(){
+  const q = normalize(state.q.trim());
+  return TASKS.filter(t=>{
+    const matchesQ = !q || (
+      normalize(t.title).includes(q) ||
+      normalize(t.desc).includes(q) ||
+      normalize(t.category).includes(q) ||
+      normalize(t.difficulty).includes(q)
+    );
+    const matchesCat = (state.category === "all") || (t.category === state.category);
+    const matchesDiff = (state.difficulty === "all") || (t.difficulty === state.difficulty);
+    const matchesTab = matchesStatusTab(t.id);
+    return matchesQ && matchesCat && matchesDiff && matchesTab;
+  });
+}
+
+function renderTasks(){
+  const list = getFilteredTasks();
+  const grid = $("#tasksGrid");
+  grid.innerHTML = "";
+
+  if(list.length === 0){
+    grid.innerHTML = `
+      <div class="card" style="grid-column:1/-1;text-align:center;">
+        <h3 style="margin:0 0 8px;">لا توجد نتائج</h3>
+        <p style="margin:0;">جرّب تغيير الكلمات أو الفلاتر أو التبويب.</p>
+      </div>`;
+    return;
+  }
+
+  list.forEach(t=>{
+    const saved = state.saved.has(t.id);
+    const statusPill = statusPillForTask(t.id);
+
+    const card = document.createElement("div");
+    card.className = "card task-card";
+    card.innerHTML = `
+      <div class="pill-row">
+        <span class="pill">${escapeHtml(t.category)}</span>
+        ${pillForDifficulty(t.difficulty)}
+        ${saved ? `<span class="pill">محفوظة ⭐</span>` : ``}
+        ${statusPill}
+      </div>
+      <h3 class="task-title">${escapeHtml(t.title)}</h3>
+      <p class="task-desc">${escapeHtml(t.desc)}</p>
+      <div class="task-footer">
+        <span class="meta">معرّف: ${escapeHtml(t.id)}</span>
+        <button class="btn small primary" data-open="${escapeHtml(t.id)}">فتح المهمة</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  $$("[data-open]").forEach(btn=>{
+    btn.addEventListener("click", ()=> openTask(btn.getAttribute("data-open")));
+  });
+}
+
+/** =========================
+ *  Task Modal
+ *  ========================= **/
+function openTask(id){
+  const t = TASKS.find(x=>x.id===id);
+  if(!t) return;
+
+  state.activeTask = t;
+
+  $("#modalTitle").textContent = t.title;
+  $("#modalSubtitle").textContent = t.desc;
+
+  const pills = [];
+  pills.push(`<span class="pill">${escapeHtml(t.category)}</span>`);
+  pills.push(pillForDifficulty(t.difficulty));
+  if(state.saved.has(t.id)) pills.push(`<span class="pill">محفوظة ⭐</span>`);
+
+  const mySub = state.submissions.find(s => s.taskId === t.id && s.studentName === state.user.name);
+  if(mySub){
+    if(mySub.status === "submitted") pills.push(`<span class="pill good">تم الإرسال</span>`);
+    if(mySub.status === "reviewed") pills.push(`<span class="pill reviewed">تمت المراجعة</span>`);
+    if(mySub.status === "needs") pills.push(`<span class="pill needs">بحاجة تحسين</span>`);
+  }
+  $("#modalPills").innerHTML = pills.join("");
+
+  $("#modalProblem").textContent = t.problem;
+
+  const del = $("#modalDeliverables"); del.innerHTML = "";
+  t.deliverables.forEach(x=>{
+    const li=document.createElement("li"); li.textContent=x; del.appendChild(li);
+  });
+
+  const cr = $("#modalCriteria"); cr.innerHTML = "";
+  t.criteria.forEach(x=>{
+    const li=document.createElement("li"); li.textContent=x; cr.appendChild(li);
+  });
+
+  $("#modalFooterNote").textContent = t.sourceHint;
+
+  if(mySub && mySub.status === "needs"){
+    $("#taskHint").textContent = "🔴 هذه المهمة بحاجة تحسين — ارفع نسخة محسّنة ثم أعد الإرسال.";
+  }else{
+    $("#taskHint").textContent = "* في الـ MVP: يتم حفظ التسليم محليًا ويظهر في لوحة الطالب.";
+  }
+
+  $("#submissionText").value = mySub?.text || "";
+  $("#submissionFile").value = "";
+
+  openBackdrop("backdrop");
+}
+
+function closeTask(){
+  state.activeTask = null;
+  closeBackdrop("backdrop");
+}
+
+/** =========================
+ *  Submissions (Student)
+ *  ========================= **/
+function submitActiveTask(){
+  const t = state.activeTask;
+  if(!t) return;
+
+  if(state.user.role !== "student"){
+    showToast("تنبيه", "لإرسال مهمة يجب الدخول كـ طالب.");
+    openOnboarding();
+    return;
+  }
+
+  const text = $("#submissionText").value.trim();
+  const file = $("#submissionFile").files?.[0];
+
+  if(!text && !file){
+    showToast("قبل الإرسال", "اكتب ملخص الحل أو ارفع ملف واحد على الأقل.");
+    return;
+  }
+
+  state.submissions = state.submissions.filter(s => !(s.taskId===t.id && s.studentName===state.user.name));
+
+  state.submissions.push({
+    taskId: t.id,
+    studentName: state.user.name,
+    studentUni: state.user.uni || "",
+    text,
+    fileName: file ? file.name : null,
+    submittedAt: new Date().toISOString(),
+    status: "submitted",
+    reviewerNote: ""
+  });
+
+  closeTask();
+  renderAll();
+
+  $("#successSummary").textContent =
+    `المهمة: ${t.id} — ${t.title}\n` +
+    `ملخص: ${text ? text.slice(0, 120) + (text.length>120 ? "…" : "") : "—"}\n` +
+    `ملف: ${file ? file.name : "لا يوجد"}`;
+
+  openBackdrop("successBackdrop");
+}
+
+function toggleSave(){
+  const t = state.activeTask;
+  if(!t) return;
+
+  if(state.saved.has(t.id)){
+    state.saved.delete(t.id);
+    showToast("تم الإلغاء", "تمت إزالة المهمة من المحفوظات.");
+  }else{
+    state.saved.add(t.id);
+    showToast("تم الحفظ ⭐", "تم حفظ المهمة للمراجعة لاحقًا.");
+  }
+  openTask(t.id);
+  renderAll();
+}
+
+async function copyTaskDetails(){
+  const t = state.activeTask;
+  if(!t) return;
+
+  const content =
+`عنوان المهمة: ${t.title}
+المعرف: ${t.id}
+التصنيف: ${t.category}
+المستوى: ${t.difficulty}
+
+وصف المشكلة:
+${t.problem}
+
+المطلوب:
+- ${t.deliverables.join("\n- ")}
+
+معايير النجاح:
+- ${t.criteria.join("\n- ")}
+`;
+  try{
+    await navigator.clipboard.writeText(content);
+    showToast("تم النسخ 📋", "تم نسخ تفاصيل المهمة إلى الحافظة.");
+  }catch{
+    showToast("تعذر النسخ", "المتصفح منع النسخ. انسخ يدويًا.");
+  }
+}
+
+/** =========================
+ *  Dashboard Render
+ *  ========================= **/
+function getMySubmissions(){
+  if(state.user.role !== "student") return [];
+  return state.submissions.filter(s => s.studentName === state.user.name);
+}
+function myTaskStatus(taskId){
+  if(state.user.role !== "student") return "—";
+  const s = state.submissions.find(x => x.taskId === taskId && x.studentName === state.user.name);
+  if(s?.status === "submitted") return "تم الإرسال";
+  if(s?.status === "reviewed") return "تمت المراجعة";
+  if(s?.status === "needs") return "بحاجة تحسين";
+  if(state.saved.has(taskId)) return "قيد التنفيذ";
+  return "—";
+}
+function renderDashboard(){
+  if(state.user.role !== "student"){
+    $("#dashTable").innerHTML = `<tr><td colspan="4" class="muted">الدخول كطالب مطلوب لعرض لوحة الطالب.</td></tr>`;
+    $("#dashInProgress").textContent = "—";
+    $("#dashSubmitted").textContent = "—";
+    $("#dashReviewed").textContent = "—";
+    return;
+  }
+
+  const mySubs = getMySubmissions();
+  const inProgress = Array.from(state.saved).filter(id => !mySubs.some(s => s.taskId === id)).length;
+  const submitted = mySubs.filter(s => s.status === "submitted").length;
+  const reviewed = mySubs.filter(s => s.status === "reviewed" || s.status === "needs").length;
+
+  $("#dashInProgress").textContent = inProgress;
+  $("#dashSubmitted").textContent = submitted;
+  $("#dashReviewed").textContent = reviewed;
+
+  const ids = new Set([...Array.from(state.saved), ...mySubs.map(s=>s.taskId)]);
+  const rows = Array.from(ids).map(id=>{
+    const t = TASKS.find(x=>x.id===id);
+    if(!t) return null;
+    const sub = mySubs.find(s=>s.taskId===id);
+    const status = myTaskStatus(id);
+
+    let statusBadge = `<span class="pill">${status}</span>`;
+    if(status === "تم الإرسال") statusBadge = `<span class="pill good">تم الإرسال</span>`;
+    if(status === "تمت المراجعة") statusBadge = `<span class="pill reviewed">تمت المراجعة</span>`;
+    if(status === "بحاجة تحسين") statusBadge = `<span class="pill needs">بحاجة تحسين</span>`;
+    if(status === "قيد التنفيذ") statusBadge = `<span class="pill">قيد التنفيذ</span>`;
+
+    const actionButtons = [];
+    actionButtons.push(`<button class="btn small" data-open="${escapeHtml(id)}">فتح</button>`);
+    if(sub && sub.status === "needs"){
+      actionButtons.push(`<button class="btn small primary" data-open="${escapeHtml(id)}">إعادة رفع</button>`);
+    }
+
+    const note = sub?.reviewerNote ? `<div class="muted" style="margin-top:6px;">📝 ${escapeHtml(sub.reviewerNote)}</div>` : "";
+
+    return `
+      <tr>
+        <td><b>${escapeHtml(id)}</b></td>
+        <td>
+          <div style="font-weight:900;">${escapeHtml(t.title)}</div>
+          <div class="muted">${escapeHtml(t.category)} • ${escapeHtml(t.difficulty)}</div>
+          ${note}
+        </td>
+        <td>${statusBadge}</td>
+        <td><div class="right-actions">${actionButtons.join("")}</div></td>
+      </tr>
+    `;
+  }).filter(Boolean);
+
+  $("#dashTable").innerHTML = rows.length ? rows.join("") : `<tr><td colspan="4" class="muted">لا توجد مهام بعد. احفظ مهمة أو أرسل تسليم.</td></tr>`;
+
+  $$(`#dashTable [data-open]`).forEach(btn=>{
+    btn.addEventListener("click", ()=> openTask(btn.getAttribute("data-open")));
+  });
+}
+
+/** =========================
+ *  Admin Render + Review
+ *  ========================= **/
+function renderAdmin(){
+  if(state.user.role !== "admin"){
+    $("#adminTable").innerHTML = `<tr><td colspan="6" class="muted">الدخول كمشرف مطلوب لعرض هذه الصفحة.</td></tr>`;
+    $("#adminSubCount").textContent = "—";
+    $("#adminPendingCount").textContent = "—";
+    return;
+  }
+
+  $("#adminSubCount").textContent = state.submissions.length;
+  $("#adminPendingCount").textContent = state.submissions.filter(s=>s.status==="submitted").length;
+
+  const rows = state.submissions
+    .slice()
+    .sort((a,b)=> (b.submittedAt||"").localeCompare(a.submittedAt||""))
+    .map(s=>{
+      const t = TASKS.find(x=>x.id===s.taskId);
+      const statusPill =
+        s.status==="submitted" ? `<span class="pill good">معلقة</span>` :
+        s.status==="reviewed" ? `<span class="pill reviewed">تمت المراجعة</span>` :
+        s.status==="needs" ? `<span class="pill needs">بحاجة تحسين</span>` : `<span class="pill">${escapeHtml(s.status)}</span>`;
+
+      const noteVal = s.reviewerNote || "";
+
+      return `
+        <tr>
+          <td><b>${escapeHtml(s.taskId)}</b></td>
+          <td>
+            <div style="font-weight:900;">${escapeHtml(s.studentName)}</div>
+            <div class="muted">${escapeHtml(s.studentUni || "—")}</div>
+          </td>
+          <td>
+            <div style="font-weight:900;">${escapeHtml(t?.title || "—")}</div>
+            <div class="muted">${escapeHtml(t?.category || "—")} • ${escapeHtml(t?.difficulty || "—")}</div>
+            <div class="muted" style="margin-top:6px;">
+              🗂 ملف: ${escapeHtml(s.fileName || "لا يوجد")}<br/>
+              ✍️ ملخص: ${escapeHtml((s.text||"—").slice(0,110) + ((s.text||"").length>110 ? "…" : ""))}
+            </div>
+          </td>
+          <td>${statusPill}</td>
+          <td>
+            <input class="adminNote" data-task="${escapeAttr(s.taskId)}" data-student="${escapeAttr(s.studentName)}"
+              value="${escapeAttr(noteVal)}" placeholder="اكتب ملاحظة مختصرة…" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);outline:none;">
+          </td>
+          <td>
+            <div class="right-actions">
+              <button class="btn small success" data-action="reviewed" data-task="${escapeAttr(s.taskId)}" data-student="${escapeAttr(s.studentName)}">Reviewed</button>
+              <button class="btn small danger" data-action="needs" data-task="${escapeAttr(s.taskId)}" data-student="${escapeAttr(s.studentName)}">Needs</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+  $("#adminTable").innerHTML = rows.length ? rows.join("") : `<tr><td colspan="6" class="muted">لا توجد تسليمات بعد. ادخل كطالب وأرسل مهمة.</td></tr>`;
+
+  $$(`#adminTable [data-action]`).forEach(btn=>{
+    btn.addEventListener("click", ()=> {
+      const action = btn.getAttribute("data-action");
+      const taskId = btn.getAttribute("data-task");
+      const student = btn.getAttribute("data-student");
+      setReview(taskId, student, action);
+    });
+  });
+}
+
+function setReview(taskId, studentName, action){
+  const noteInput = $(`#adminTable .adminNote[data-task="${cssEscape(taskId)}"][data-student="${cssEscape(studentName)}"]`);
+  const note = noteInput ? noteInput.value.trim() : "";
+
+  const idx = state.submissions.findIndex(s => s.taskId===taskId && s.studentName===studentName);
+  if(idx === -1){
+    showToast("خطأ", "لم يتم العثور على التسليم.");
+    return;
+  }
+
+  state.submissions[idx].reviewerNote = note;
+  state.submissions[idx].status = (action === "reviewed") ? "reviewed" : "needs";
+
+  renderAll();
+  showToast("تمت المراجعة ✅", `تم تحديث حالة ${taskId} للطالب ${studentName}.`);
+}
+
+/** =========================
+ *  Admin Add Task
+ *  ========================= **/
+function addTaskFromAdmin(){
+  if(state.user.role !== "admin"){
+    showToast("تنبيه", "يجب الدخول كمشرف لإضافة مهمة.");
+    openOnboarding();
+    return;
+  }
+
+  const title = $("#adminTitle").value.trim();
+  const category = $("#adminCategory").value.trim();
+  const difficulty = $("#adminDifficulty").value.trim();
+  const desc = $("#adminDesc").value.trim();
+  const problem = $("#adminProblem").value.trim();
+
+  if(!title || !category || !difficulty || !desc || !problem){
+    showToast("نقص بيانات", "املأ جميع الحقول لإضافة مهمة جديدة.");
+    return;
+  }
+
+  const nextNum = TASKS.length + 1;
+  const id = "T-" + String(nextNum).padStart(3,"0");
+
+  TASKS.push({
+    id, title, category, difficulty,
+    desc, problem,
+    deliverables:["اكتب/صمّم المخرج المطلوب حسب وصف المهمة.","ارفق شرح مختصر للقرار الذي اتخذته."],
+    criteria:["وضوح الحل.","قابلية التطبيق.","اتساق مع المشكلة."],
+    sourceHint:"مهمة أضيفت من لوحة المشرف (Demo)."
+  });
+
+  $("#adminTitle").value="";
+  $("#adminCategory").value="";
+  $("#adminDifficulty").value="";
+  $("#adminDesc").value="";
+  $("#adminProblem").value="";
+
+  initFilters();
+  renderAll();
+  showToast("تمت الإضافة ✅", `تمت إضافة المهمة الجديدة ${id}.`);
+}
+
+/** =========================
+ *  User / Onboarding
+ *  ========================= **/
+function openOnboarding(){ openBackdrop("onboardBackdrop"); }
+function closeOnboarding(){ closeBackdrop("onboardBackdrop"); }
+
+function setRole(role){
+  state.user.role = role;
+  $$(".role").forEach(r => r.classList.toggle("active", r.getAttribute("data-role") === role));
+}
+
+function applyUserUI(){
+  const isGuest = state.user.role === "guest";
+  const isStudent = state.user.role === "student";
+  const isAdmin = state.user.role === "admin";
+
+  $("#userChip").style.display = isGuest ? "none" : "inline-flex";
+  $("#userNameChip").textContent = state.user.name || "—";
+  $("#userRoleChip").textContent = isStudent ? "طالب" : (isAdmin ? "مشرف" : "ضيف");
+
+  $("#navDashboard").style.display = isStudent ? "inline-flex" : "none";
+  $("#navAdmin").style.display = isAdmin ? "inline-flex" : "none";
+  $("#goDashBtn").style.display = isStudent ? "inline-flex" : "none";
+  $("#startNow").textContent = isGuest ? "ابدأ الآن" : "تبديل المستخدم";
+
+  $("#subtitle").textContent = isAdmin
+    ? "وضع المشرف — مراجعة التسليمات"
+    : "نقد حقيقي. تدريب حقيقي. أثر حقيقي.      ";
+
+  $("#newTaskCTA").textContent = isGuest ? "ابدأ الآن" : "استعرض المهام";
+}
+
+function login(role, name, uni){
+  state.user.role = role;
+  state.user.name = name || (role==="admin" ? "مشرف" : "طالب");
+  state.user.uni = uni || "";
+
+  applyUserUI();
+
+  if(role === "admin"){
+    switchView("adminView");
+  }else if(role === "student"){
+    switchView("tasksView");
+  }else{
+    switchView("homeView");
+  }
+}
+
+function logout(){
+  state.user = { role:"guest", name:"ضيف", uni:"" };
+  applyUserUI();
+  switchView("homeView");
+  showToast("تم تسجيل الخروج", "رجعت لوضع الضيف.");
+}
+
+/** =========================
+ *  Render all
+ *  ========================= **/
+function renderAll(){
+  renderTasks();
+  renderDashboard();
+  renderAdmin();
+  $("#statTasks").textContent = `${TASKS.length} مهام`;
+}
+
+/** =========================
+ *  Escaping helpers
+ *  ========================= **/
+function escapeHtml(str){
+  return (str||"").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+}
+function escapeAttr(str){
+  return escapeHtml(str).replace(/"/g, "&quot;");
+}
+function cssEscape(str){
+  return (str||"").replace(/"/g,'\\"');
+}
+
+/** =========================
+ *  Demo NLP: Generate Task from Comment
+ *  ========================= **/
+function openGenModal(){
+  $("#genComment").value = "";
+  updateGenPreview();
+  openBackdrop("genBackdrop");
+}
+function closeGenModal(){ closeBackdrop("genBackdrop"); }
+
+function analyzeComment(comment){
+  const c = (comment || "").toLowerCase();
+
+  const buckets = [
+    {
+      category: "إخراج وتصميم",
+      difficulty: "متوسط",
+      keywords: ["تصميم", "ألوان", "خط", "مزدحم", "ترتيب", "layout", "ui", "ux", "إخراج", "قالب", "صورة", "مرئي", "فيجوال"],
+      title: "تحسين الإخراج البصري وتجربة القراءة",
+      template: "الجمهور يرى أن الإخراج/التصميم غير مريح أو مزدحم. اقترح تعديلات على التسلسل البصري والمسافات والخطوط."
+    },
+    {
+      category: "تحرير المحتوى",
+      difficulty: "سهل",
+      keywords: ["عنوان", "مبالغ", "واضح", "غير واضح", "صياغة", "إملاء", "لغة", "محتوى", "نص", "غلط", "مضلل", "التباس"],
+      title: "تحسين صياغة العنوان والنص لزيادة الوضوح",
+      template: "هناك ملاحظات على وضوح العنوان/النص. أعد صياغة عنوانين بديلين ونص مختصر أكثر دقة."
+    },
+    {
+      category: "كتابة منصات",
+      difficulty: "متوسط",
+      keywords: ["تويتر", "انستغرام", "سناب", "تيك", "ترند", "نبرة", "رسمي", "ثقيل", "سوشيال", "هاشتاق", "caption"],
+      title: "إعادة ضبط نبرة المحتوى لمنصات التواصل",
+      template: "النبرة الحالية لا تناسب منصات التواصل. أعد كتابة النسخة لتكون أخف وأقرب للجمهور مع CTA واضح."
+    },
+    {
+      category: "إدارة وتواصل",
+      difficulty: "سهل",
+      keywords: ["رد", "الردود", "متأخر", "تجاهل", "تواصل", "خدمة", "شكوى", "استجابة", "تعامل", "سلوك"],
+      title: "تصميم بروتوكول ردود وتحسين تجربة التواصل",
+      template: "هناك نقد حول تأخر الردود وعدم وضوحها. صمّم SLA بسيط + قوالب ردود مختصرة."
+    },
+    {
+      category: "تحليل أداء",
+      difficulty: "صعب",
+      keywords: ["تفاعل", "انخفاض", "وصول", "مشاهدات", "engagement", "kpi", "تحليل", "أرقام", "نسبة", "هبوط"],
+      title: "تحليل سبب انخفاض الأداء واقتراح تدخل سريع",
+      template: "يوجد انخفاض ملحوظ في الأداء. اقترح فرضيات قابلة للاختبار وخطة أسبوعية بمؤشرات قياس."
+    }
+  ];
+
+  let best = { score: 0, bucket: null };
+  for(const b of buckets){
+    let score = 0;
+    for(const k of b.keywords){
+      if(c.includes(k)) score += 1;
+    }
+    if(score > best.score){
+      best = { score, bucket: b };
+    }
+  }
+
+  if(!best.bucket){
+    return {
+      category: "تحرير المحتوى",
+      difficulty: "متوسط",
+      title: "تحويل ملاحظة عامة إلى مهمة تحسين",
+      desc: "ملاحظة عامة من الجمهور تحتاج تحويلها إلى خطوات عمل واضحة ومخرجات قابلة للتسليم.",
+      problem: comment || "—",
+      deliverables: [
+        "تلخيص المشكلة بجملة واحدة.",
+        "اقتراح 3 تحسينات عملية قابلة للتنفيذ.",
+        "تحديد مخرج نهائي (نص/تصميم/خطة) حسب المشكلة."
+      ],
+      criteria: ["وضوح المشكلة.","حلول محددة وليست عامة.","مخرجات قابلة للعرض."]
+    };
+  }
+
+  const intenseWords = ["كارثي", "سيء جدًا", "فضيحة", "ضعيف جدًا", "مستحيل", "مرة", "للأمانة"];
+  let difficulty = best.bucket.difficulty;
+  if(intenseWords.some(w => c.includes(w))) difficulty = "صعب";
+
+  const deliverablesMap = {
+    "إخراج وتصميم": [
+      "قائمة تعديلات (مسافات/خطوط/تباين/تسلسل).",
+      "رسم تخطيطي (Wireframe) أو وصف مرئي للحل."
+    ],
+    "تحرير المحتوى": [
+      "صياغة عنوانين بديلين.",
+      "إعادة كتابة فقرة مختصرة أكثر وضوحًا."
+    ],
+    "كتابة منصات": [
+      "نسختين: تويتر + إنستغرام (أو منصة تختارها).",
+      "CTA مناسب + اقتراح هاشتاقات (اختياري)."
+    ],
+    "إدارة وتواصل": [
+      "SLA مبسط للاستجابة.",
+      "3 قوالب رد جاهزة (استفسار/شكوى/اقتراح)."
+    ],
+    "تحليل أداء": [
+      "3 فرضيات قابلة للاختبار (سبب + طريقة تحقق).",
+      "خطة أسبوع: إجراءات + KPI لكل إجراء."
+    ]
+  };
+
+  return {
+    category: best.bucket.category,
+    difficulty,
+    title: best.bucket.title,
+    desc: best.bucket.template,
+    problem: comment || "—",
+    deliverables: deliverablesMap[best.bucket.category] || ["تسليم مخرج واضح مرتبط بالمشكلة."],
+    criteria: ["حلول قابلة للتنفيذ.","وضوح وتسلسل منطقي.","اتساق المخرج مع المشكلة."]
+  };
+}
+
+function updateGenPreview(){
+  const comment = ($("#genComment").value || "").trim();
+  const analysis = analyzeComment(comment);
+
+  $("#genPreviewPills").innerHTML = `
+    <span class="pill">${escapeHtml(analysis.category)}</span>
+    ${pillForDifficulty(analysis.difficulty)}
+    <span class="pill">Demo NLP</span>
+  `;
+  $("#genPreviewTitle").textContent = analysis.title;
+  $("#genPreviewDesc").textContent = analysis.desc;
+
+  return analysis;
+}
+
+function createTaskFromComment(){
+  const comment = ($("#genComment").value || "").trim();
+  if(!comment){
+    showToast("نقص بيانات", "اكتب تعليقًا أولًا ثم أنشئ المهمة.");
+    return;
+  }
+
+  const analysis = updateGenPreview();
+  const nextNum = TASKS.length + 1;
+  const id = "T-" + String(nextNum).padStart(3,"0");
+
+  TASKS.push({
+    id,
+    title: analysis.title,
+    category: analysis.category,
+    difficulty: analysis.difficulty,
+    desc: analysis.desc,
+    problem: analysis.problem,
+    deliverables: analysis.deliverables,
+    criteria: analysis.criteria,
+    sourceHint: "مهمة مولّدة من تعليق (Demo NLP)."
+  });
+
+  initFilters();
+  renderAll();
+  closeGenModal();
+  showToast("تم توليد المهمة ✨", `تمت إضافة المهمة الجديدة ${id} إلى القائمة.`);
+}
+
+/** =========================
+ *  Events
+ *  ========================= **/
+function wireEvents(){
+  $$("[data-view]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-view");
+
+      if(id === "dashboardView" && state.user.role !== "student"){
+        showToast("تنبيه", "الدخول كطالب مطلوب لعرض لوحة الطالب.");
+        openOnboarding();
+        return;
+      }
+      if(id === "adminView" && state.user.role !== "admin"){
+        showToast("تنبيه", "الدخول كمشرف مطلوب لعرض لوحة المشرف.");
+        openOnboarding();
+        return;
+      }
+      switchView(id);
+    });
+  });
+
+  $("#goHome").addEventListener("click", ()=> switchView("homeView"));
+
+  $("#startNow").addEventListener("click", ()=> openOnboarding());
+  $("#newTaskCTA").addEventListener("click", ()=>{
+    if(state.user.role === "guest"){ openOnboarding(); }
+    else switchView("tasksView");
+  });
+
+  $$("#statusTabs .tab").forEach(tab=>{
+    tab.addEventListener("click", ()=>{
+      $$("#statusTabs .tab").forEach(t=>t.classList.remove("active"));
+      tab.classList.add("active");
+      state.statusTab = tab.getAttribute("data-status");
+      renderTasks();
+    });
+  });
+
+  $("#q").addEventListener("input", e=>{ state.q = e.target.value; renderTasks(); });
+  $("#category").addEventListener("change", e=>{ state.category = e.target.value; renderTasks(); });
+  $("#difficulty").addEventListener("change", e=>{ state.difficulty = e.target.value; renderTasks(); });
+  $("#reset").addEventListener("click", ()=>{
+    state.q=""; state.category="all"; state.difficulty="all";
+    $("#q").value=""; $("#category").value="all"; $("#difficulty").value="all";
+    showToast("تمت إعادة الضبط", "تمت إعادة الفلاتر والبحث للوضع الافتراضي.");
+    renderTasks();
+  });
+
+  $("#closeModal").addEventListener("click", closeTask);
+  $("#backdrop").addEventListener("click", (e)=>{ if(e.target === $("#backdrop")) closeTask(); });
+  document.addEventListener("keydown", (e)=>{ if(e.key==="Escape" && $("#backdrop").classList.contains("show")) closeTask(); });
+
+  $("#submitTask").addEventListener("click", submitActiveTask);
+  $("#markSaved").addEventListener("click", toggleSave);
+  $("#copyTask").addEventListener("click", copyTaskDetails);
+
+  $("#openDemoTask").addEventListener("click", ()=>{
+    switchView("tasksView");
+    openTask("T-003");
+  });
+
+  $("#toastClose").addEventListener("click", hideToast);
+
+  $("#closeSuccess").addEventListener("click", ()=> closeBackdrop("successBackdrop"));
+  $("#successBackdrop").addEventListener("click", (e)=>{ if(e.target === $("#successBackdrop")) closeBackdrop("successBackdrop"); });
+  document.addEventListener("keydown", (e)=>{ if(e.key==="Escape" && $("#successBackdrop").classList.contains("show")) closeBackdrop("successBackdrop"); });
+
+  $("#goDashFromSuccess").addEventListener("click", ()=>{
+    closeBackdrop("successBackdrop");
+    if(state.user.role !== "student"){ openOnboarding(); return; }
+    switchView("dashboardView");
+  });
+  $("#goAdminFromSuccess").addEventListener("click", ()=>{
+    closeBackdrop("successBackdrop");
+    openOnboarding();
+    showToast("تلميح", "اختر دور “مشرف” ثم افتح لوحة المشرف لمراجعة التسليم.");
+  });
+
+  $("#goDashBtn").addEventListener("click", ()=>{
+    if(state.user.role !== "student"){ openOnboarding(); return; }
+    switchView("dashboardView");
+  });
+
+  $("#logoutBtn").addEventListener("click", logout);
+  $("#logoutAdminBtn").addEventListener("click", logout);
+
+  $("#adminAddTask").addEventListener("click", addTaskFromAdmin);
+
+  $$(".role").forEach(r=>{
+    r.addEventListener("click", ()=> setRole(r.getAttribute("data-role")));
+  });
+
+  $("#skipOnboard").addEventListener("click", ()=>{
+    state.user = { role:"guest", name:"ضيف", uni:"" };
+    closeOnboarding();
+    applyUserUI();
+    switchView("homeView");
+  });
+
+  $("#demoFill").addEventListener("click", ()=>{
+    $("#onName").value = "صالح (Demo)";
+    $("#onUni").value = "جامعة (Demo)";
+  });
+
+  $("#enterApp").addEventListener("click", ()=>{
+    const selected = $(".role.active")?.getAttribute("data-role") || "student";
+    const name = $("#onName").value.trim();
+    const uni = $("#onUni").value.trim();
+
+    closeOnboarding();
+    login(selected, name || (selected==="admin" ? "مشرف (Demo)" : "طالب (Demo)"), uni);
+    showToast("تم الدخول ✅", selected==="admin" ? "أنت الآن في وضع المشرف." : "أنت الآن في وضع الطالب.");
+    renderAll();
+  });
+
+  // Generate Task modal (Demo NLP)
+  $("#genFromCommentBtn")?.addEventListener("click", openGenModal);
+  $("#closeGen")?.addEventListener("click", closeGenModal);
+  $("#genBackdrop")?.addEventListener("click", (e)=>{ if(e.target === $("#genBackdrop")) closeGenModal(); });
+
+  $("#genOnlyPreview")?.addEventListener("click", ()=>{
+    updateGenPreview();
+    showToast("تم تحديث المعاينة", "تم تحليل التعليق وتحديث تفاصيل المهمة المقترحة.");
+  });
+
+  $("#genCreateTask")?.addEventListener("click", createTaskFromComment);
+  $("#genComment")?.addEventListener("input", updateGenPreview);
+
+  $("#fillExample1")?.addEventListener("click", ()=>{
+    $("#genComment").value = "الإخراج مزدحم والخط صغير والهوامش قليلة. صرت ما أقدر أقرأ بسرعة.";
+    updateGenPreview();
+  });
+  $("#fillExample2")?.addEventListener("click", ()=>{
+    $("#genComment").value = "العنوان مبالغ ومضلل، والنص فيه مصطلحات تسبب التباس. نحتاج صياغة أوضح.";
+    updateGenPreview();
+  });
+  $("#fillExample3")?.addEventListener("click", ()=>{
+    $("#genComment").value = "التفاعل انخفض بشكل واضح آخر أسبوع. نحتاج تحليل سريع وخطة تدخل لمدة أسبوع بمؤشرات قياس.";
+    updateGenPreview();
+  });
+}
+
+/** =========================
+ *  Boot
+ *  ========================= **/
+function boot(){
+  // default role in onboarding
+  state.user.role = "student";
+  setRole("student");
+
+  initFilters();
+  applyUserUI();
+  wireEvents();
+  renderAll();
+}
+
+boot();
+</script>
+</body>
+</html>
